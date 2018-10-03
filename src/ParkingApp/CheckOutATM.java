@@ -78,7 +78,7 @@ public class CheckOutATM {
         System.out.println("Activity to Date\n");
         System.out.printf("$%s.00 was collected from %d Check Ins\n", Integer.toString(collectedDollars), collectionCount);
         System.out.printf("$%s.00 was collected from %d lost tickets\n", Integer.toString(lostDollars), lostCount);
-        System.out.printf("%d vehicles have not yet checked out\n", remainingVehicles);
+        System.out.printf("%d vehicle(s) have not yet checked out\n", remainingVehicles);
     }
 
 }

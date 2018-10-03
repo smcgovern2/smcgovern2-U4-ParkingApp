@@ -31,9 +31,9 @@ public class UserInterface {
         while (input != "3") {
             showHeader();
             if (isLiveTicket) {
-                showCheckOut();
+                showCheckOutMenu();
             } else {
-                showCheckIn();
+                showCheckInMenu();
             }
             try {
                 input = inStream.readLine();
@@ -84,7 +84,7 @@ public class UserInterface {
     /**
      * displays checkin menu in console
      */
-    public void showCheckIn() {
+    public void showCheckInMenu() {
         System.out.println("1 - Check/In");
         System.out.println("3 - Close Garage");
         System.out.print("=>");
@@ -93,7 +93,7 @@ public class UserInterface {
     /**
      * Display checkout menu in console
      */
-    public void showCheckOut() {
+    public void showCheckOutMenu() {
         System.out.println("1 - Check/Out");
         System.out.println("2 - Lost Ticket");
         System.out.println("3 - Close Garage");
