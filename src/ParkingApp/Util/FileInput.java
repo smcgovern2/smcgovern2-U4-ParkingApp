@@ -1,4 +1,4 @@
-package ParkingApp;
+package ParkingApp.Util;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -7,7 +7,7 @@ import java.io.IOException;
 
 /**
  * @author Matt Green
- * @Version 1.0.0
+ * @version 1.0.0
  */
 public class FileInput {
 
@@ -36,8 +36,7 @@ public class FileInput {
 
     public String fileReadLine() {
         try {
-            String line = in.readLine();
-            return line;
+            return in.readLine();
         } catch (Exception e) {
             System.out.println("File Write Error: " + fileName + " " + e);
             return null;

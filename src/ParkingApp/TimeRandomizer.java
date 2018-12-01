@@ -9,9 +9,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Class to randomize checkin and checkout times
  * @author Sean McGovern
- * @Version 1.0.0
+ * @version 1.0.0
  */
-public class TimeRandomizer {
+public enum TimeRandomizer {
+    TIME_RANDOMIZER;
 
     /**
      * Get a random time at the nearest hour value in a range
@@ -29,23 +30,35 @@ public class TimeRandomizer {
     /**
      * gets random time between 07:00 and 12:00
      * @return randomized time in morning
-     * @throws ParseException when unable to parse startTime
+     *
      */
-    public Date getMorningTime() throws ParseException {
-        SimpleDateFormat sd = new SimpleDateFormat("HH:mm:ss");
-        String startTime = "07:00:00";
-        return getRandomTime(sd.parse(startTime), 5);
+    public Date getMorningTime(){
+        try{
+            SimpleDateFormat sd = new SimpleDateFormat("HH:mm:ss");
+            String startTime = "07:00:00";
+            return getRandomTime(sd.parse(startTime), 5);
+        } catch (ParseException e){
+            System.out.println("Date Parse has failed, Exiting...");
+            System.exit(0);
+            return null;
+        }
     }
 
     /**
      * gets random time between 13:00 and 23:00
      * @return randomized time in evening
-     * @throws ParseException when unable to parse startTime
+     *
      */
-    public Date getEveningTime() throws ParseException {
-        SimpleDateFormat sd = new SimpleDateFormat("HH:mm:ss");
-        String startTime = "13:00:00";
-        return getRandomTime(sd.parse(startTime), 10);
+    public Date getEveningTime() {
+        try {
+            SimpleDateFormat sd = new SimpleDateFormat("HH:mm:ss");
+            String startTime = "13:00:00";
+            return getRandomTime(sd.parse(startTime), 10);
+        } catch (ParseException e){
+            System.out.println("Date Parse has failed, Exiting...");
+            System.exit(0);
+            return null;
+        }
     }
 
 

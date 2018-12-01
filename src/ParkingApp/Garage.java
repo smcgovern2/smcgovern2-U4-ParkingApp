@@ -1,14 +1,19 @@
 package ParkingApp;
 
+import ParkingApp.Util.ConfigData;
+import ParkingApp.Util.FileInput;
+import ParkingApp.Util.FileOutput;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.EnumMap;
 
 /**
  * Class to simulate a parking garage
  * @author Sean McGovern
- * @Version 1.0.0
+ * @version 1.0.0
  */
 
 public class Garage {
@@ -17,61 +22,83 @@ public class Garage {
     private CheckInATM checkInATM;
     private CheckOutATM checkOutATM;
     private TreeMap<Integer, Ticket> ticketMap;
-    private TimeRandomizer timeRandomizer;
-
-    private int lastTicketID;
+    private EnumMap<TicketType, PricingMode> priceMap = new EnumMap<>(TicketType.class);
 
 
-    public Garage() throws ParseException {
+
+
+    Garage(ConfigData config) throws NumberFormatException {
         FileInput inFile = new FileInput("Ledger.csv");
         String line;
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        this.lastTicketID = 0;
-        this.ticketMap = new TreeMap<Integer, Ticket>();
-        while ((line = inFile.fileReadLine()) != null) {
-            String[] fields = line.split(",");
-            Ticket ticket = new Ticket(Integer.parseInt(fields[0]), sdf.parse(fields[1]), (!(fields[2].equals("null")) ? sdf.parse(fields[2]) : null), Boolean.getBoolean(fields[3]));
-            ticketMap.put(Integer.parseInt(fields[0]), ticket);
-            this.lastTicketID = Integer.parseInt(fields[0]);
+        int lastTicketID = 0;
+        this.ticketMap = new TreeMap<>();
+        TicketType ticketType;
+        try {
+            while ((line = inFile.fileReadLine()) != null) {
+                String[] fields = line.split(",");
+                String ticketTypeString = fields[3];
+                try {
+                    ticketType = TicketType.valueOf(ticketTypeString);
+                } catch (EnumConstantNotPresentException e) {
+                    System.out.println("Unable to read from file");
+                    break;
+                }
+
+                Ticket ticket;
+                switch (ticketType) {
+                    case MINMAX:
+                        ticket = new MinMaxTicket(Integer.parseInt(fields[0]), sdf.parse(fields[1]));
+                        ticket.setOutTime(!(fields[2].equals("null")) ? sdf.parse(fields[2]) : null);
+                        break;
+                    case EVENT:
+                        ticket = new EventTicket(Integer.parseInt(fields[0]), sdf.parse(fields[1]));
+                        ticket.setOutTime(!(fields[2].equals("null")) ? sdf.parse(fields[2]) : null);
+                        break;
+                    case LOST:
+                        ticket = new LostTicket(Integer.parseInt(fields[0]), sdf.parse(fields[1]));
+                        ticket.setOutTime(!(fields[2].equals("null")) ? sdf.parse(fields[2]) : null);
+                        break;
+                    default:
+                        throw new Exception("Error on import");
+                }
+                ticketMap.put(Integer.parseInt(fields[0]), ticket);
+                lastTicketID = Integer.parseInt(fields[0]);
+            }
+            inFile.fileClose();
+        } catch (Exception e) {
+            System.out.println("Failed to initialize garage");
+            System.exit(10);
         }
-        inFile.fileClose();
 
-        this.checkInATM = new CheckInATM();
-        this.checkOutATM = new CheckOutATM();
-        this.timeRandomizer = new TimeRandomizer();
+        TicketBuilder.TICKET_BUILDER.setLastTicketId(lastTicketID);
+        this.checkInATM = new CheckInATM(this);
+        this.checkOutATM = new CheckOutATM(this);
+        priceMap.put(TicketType.MINMAX, new MinMaxPricing(config.getMinmaxFields()[0], config.getMinmaxFields()[1], config.getMinmaxFields()[2], config.getMinmaxFields()[3]));
+        priceMap.put(TicketType.EVENT, new EventPricing(config.getEventField()));
+        priceMap.put(TicketType.LOST, new LostPricing(config.getLostField()));
     }
 
-    /**
-     * Generates/adds a new vehicle/ticket to ticketmap
-     * @throws ParseException date format TimeRandomizer cannot parse date from string
-     */
-    public void checkInVehicle() throws ParseException {
-        this.lastTicketID += 1;
-        Ticket ticket = checkInATM.createTicket(this.lastTicketID, timeRandomizer.getMorningTime());
-        ticketMap.put(ticket.getTicketID(), ticket);
+
+    void checkInVehicle(TicketType type){
+        checkInATM.createTicket(type);
+
     }
 
-    /**
-     * Checks a vehicle out of garage
-     * @param id id of vehicle/ticket to check out
-     * @param isLost whether or not the ticket has been misplaced
-     * @throws ParseException Date in TimeRandomizer cannot be parsed
-     */
-    public void checkOutVehicle(int id, boolean isLost) throws ParseException {
-        Ticket ticket = checkOutATM.checkoutTicket(ticketMap.get(id), timeRandomizer.getEveningTime(), isLost);
-        ticketMap.put(id, ticket);
+    void checkOutVehicle(int id){
+        checkOutATM.checkoutTicket(ticketMap.get(id));
     }
     /**
      * Closes garage and ends program
      */
-    public void closeGarage() {
+    void closeGarage() {
         checkOutATM.displayEODInfo(ticketMap);
         FileOutput outFile = new FileOutput("Ledger.csv");
         for (Map.Entry<Integer, Ticket> entry : ticketMap.entrySet()) {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
             Ticket value = entry.getValue();
             Integer key = entry.getKey();
-            outFile.fileWrite(key.toString() + "," + sdf.format(value.getInTime()) + "," + ((value.getOutTime() != null) ? sdf.format(value.getOutTime()) : "null") + "," + Boolean.toString(value.isLost()));
+            outFile.fileWrite(key.toString() + "," + sdf.format(value.getInTime()) + "," + ((value.getOutTime() != null) ? sdf.format(value.getOutTime()) : "null") + "," + value.getType());
         }
         outFile.fileClose();
         System.out.println("System will now terminate");
@@ -98,7 +125,7 @@ public class Garage {
      * get the checkout atm
      * @return the checkout atm
      */
-    public CheckOutATM getCheckOutATM() {
+    CheckOutATM getCheckOutATM() {
         return checkOutATM;
     }
 
@@ -115,7 +142,7 @@ public class Garage {
      * @return ticket map
      */
 
-    public TreeMap<Integer, Ticket> getTicketMap() {
+    TreeMap<Integer, Ticket> getTicketMap() {
         return ticketMap;
     }
 
@@ -128,36 +155,8 @@ public class Garage {
         this.ticketMap = ticketMap;
     }
 
-    /**
-     * get time randomizer
-     * @return time randomizer
-     */
-    public TimeRandomizer getTimeRandomizer() {
-        return timeRandomizer;
-    }
 
-    /**
-     * set new time randomizer
-     * @param timeRandomizer new time randomizer
-     */
-    public void setTimeRandomizer(TimeRandomizer timeRandomizer) {
-        this.timeRandomizer = timeRandomizer;
-    }
-
-    /**
-     * Gets the id of the most recent ticket
-     * @return the most recent ticket
-     */
-    public int getLastTicketID() {
-        return lastTicketID;
-    }
-
-    /**
-     * sets numeric id for most recent ticket
-     * @param lastTicketID new id
-     */
-
-    public void setLastTicketID(int lastTicketID) {
-        this.lastTicketID = lastTicketID;
+    EnumMap<TicketType, PricingMode> getPriceMap() {
+        return priceMap;
     }
 }

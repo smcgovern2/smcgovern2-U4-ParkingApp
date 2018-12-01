@@ -6,17 +6,22 @@ import java.util.Date;
  * @author Sean McGovern
  * @version 1.0.0
  */
-public class CheckInATM {
+class CheckInATM {
 
-    /**
-     * Creates a new ticket
-     * @param ticketID numeric id of the ticket to be created
-     * @param inTime time of tickets creation
-     * @return Ticket with assigned id and inTime, null outTime, and false isLost
-     */
-    public Ticket createTicket(int ticketID, Date inTime){
-        Ticket ticket = new Ticket(ticketID, inTime);
-        return ticket;
+    private Garage garage;
+
+    CheckInATM(Garage garage) {
+        this.garage = garage;
+    }
+
+    void createTicket(TicketType type){
+        Ticket ticket = TicketBuilder.TICKET_BUILDER.getTicket(type);
+        if (ticket != null) {
+            this.garage.getTicketMap().put(ticket.getTicketID(), ticket);
+        } else {
+            System.out.println("Null ticket");
+            System.exit(10);
+        }
     }
 
 }

@@ -1,14 +1,14 @@
-package ParkingApp;
+package ParkingApp.Util;
 
 import java.io.*;
 
 /**
  * @author Matt Green
- * @Version 1.0.0
+ * @version 1.0.0
  */
 public class FileOutput {
 
-    Writer out = null;
+    private Writer out = null;
     private String fileName;
 
     public FileOutput(String fileName) {
