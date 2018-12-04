@@ -25,7 +25,7 @@ public class CheckInATMTest {
 
     @Test
     public void createTicket() {
-        garage.getCheckInATM().createTicket(TicketType.MINMAX);
+        garage.getCheckInATM().checkInTicket(TicketType.MINMAX);
         assertNotNull(garage.getTicketMap().get(1));
         assertTrue(garage.getTicketMap().get(1).getType().equals(TicketType.MINMAX) );
 

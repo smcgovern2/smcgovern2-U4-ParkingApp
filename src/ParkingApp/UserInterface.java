@@ -21,7 +21,7 @@ public class UserInterface {
     /**
      * Iterates through a menu and responds to user input gathered from console
      */
-    void loopMenu() {
+    public void loopMenu() {
         BufferedReader inStream = new BufferedReader(new InputStreamReader(System.in));
         String input = "";
         boolean isLiveTicket = false;
@@ -41,7 +41,7 @@ public class UserInterface {
             switch (input) {
                 case "1":
                     if (isLiveTicket) {
-                        garage.checkOutVehicle(TicketBuilder.TICKET_BUILDER.getLastTicketId());
+                        garage.checkOutVehicle(TicketBuilder.TICKET_BUILDER.getLastTicketID());
                         isLiveTicket = false;
                     } else {
                         garage.checkInVehicle(TicketType.MINMAX);
@@ -50,8 +50,8 @@ public class UserInterface {
                     break;
                 case "2":
                     if (isLiveTicket) {
-                        garage.getCheckOutATM().loseTicket(TicketBuilder.TICKET_BUILDER.getLastTicketId());
-                        garage.checkOutVehicle(TicketBuilder.TICKET_BUILDER.getLastTicketId());
+                        garage.getCheckOutATM().loseTicket(TicketBuilder.TICKET_BUILDER.getLastTicketID());
+                        garage.checkOutVehicle(TicketBuilder.TICKET_BUILDER.getLastTicketID());
                         isLiveTicket = false;
                     } else {
                         garage.checkInVehicle(TicketType.EVENT);

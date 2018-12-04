@@ -78,10 +78,10 @@ public class Garage {
             System.exit(10);
         }
 
-        TicketBuilder.TICKET_BUILDER.setLastTicketId(lastTicketID);
+        TicketBuilder.TICKET_BUILDER.setLastTicketID(lastTicketID);
         this.checkInATM = new CheckInATM(this);
         this.checkOutATM = new CheckOutATM(this);
-        priceMap.put(TicketType.MINMAX, new MinMaxPricing(config.getMinmaxFields()[0], config.getMinmaxFields()[1], config.getMinmaxFields()[2], config.getMinmaxFields()[3]));
+        priceMap.put(TicketType.MINMAX, new MinMaxPricing(config.getMinMaxFields()[0], config.getMinMaxFields()[1], config.getMinMaxFields()[2], config.getMinMaxFields()[3]));
         priceMap.put(TicketType.EVENT, new EventPricing(config.getEventField()));
         priceMap.put(TicketType.LOST, new LostPricing(config.getLostField()));
     }
@@ -92,7 +92,7 @@ public class Garage {
      * @param type initial ticket type for vehicle
      */
     public void checkInVehicle(TicketType type){
-        checkInATM.createTicket(type);
+        checkInATM.checkInTicket(type);
 
     }
 

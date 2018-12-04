@@ -15,8 +15,8 @@ public class CheckInATM {
     /**Method to add new ticket to garage
      * @param type type of ticket to add
      */
-    public void createTicket(TicketType type){
-        Ticket ticket = TicketBuilder.TICKET_BUILDER.getTicket(type);
+    public void checkInTicket(TicketType type){
+        Ticket ticket = TicketBuilder.TICKET_BUILDER.getNewTicket(type);
         if (ticket != null) {
             this.garage.getTicketMap().put(ticket.getTicketID(), ticket);
         } else {

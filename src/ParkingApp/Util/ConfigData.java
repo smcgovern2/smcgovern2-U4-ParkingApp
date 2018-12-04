@@ -25,7 +25,7 @@ public class ConfigData {
      * generic get method
      * @return minmax fields
      */
-    public int[] getMinmaxFields() {
+    public int[] getMinMaxFields() {
         return minmaxFields;
     }
 

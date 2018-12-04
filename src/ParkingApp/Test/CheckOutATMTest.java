@@ -25,7 +25,7 @@ public class CheckOutATMTest {
 
     @Test
     public void checkoutTicket() {
-        garage.getCheckInATM().createTicket(TicketType.MINMAX);
+        garage.getCheckInATM().checkInTicket(TicketType.MINMAX);
         assertNull(garage.getTicketMap().get(1).getOutTime());
         garage.getCheckOutATM().checkoutTicket(garage.getTicketMap().get(1));
         assertNotNull(garage.getTicketMap().get(1).getOutTime());
@@ -33,7 +33,7 @@ public class CheckOutATMTest {
 
     @Test
     public void loseTicket() {
-        garage.getCheckInATM().createTicket(TicketType.MINMAX);
+        garage.getCheckInATM().checkInTicket(TicketType.MINMAX);
         garage.getCheckOutATM().loseTicket(1);
         assertEquals(TicketType.LOST, garage.getTicketMap().get(1).getType());
     }

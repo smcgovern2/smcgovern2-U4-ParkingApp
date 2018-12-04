@@ -13,7 +13,7 @@ public enum TicketBuilder {
     TICKET_BUILDER;
 
 
-    private int lastTicketId = 0;
+    private int lastTicketID = 0;
     TicketBuilder(){}
 
     /**
@@ -21,12 +21,12 @@ public enum TicketBuilder {
      * @param ticketType Initial type of ticket
      * @return new ticket object;
      */
-    public Ticket getTicket (TicketType ticketType){
-        lastTicketId++;
+    public Ticket getNewTicket(TicketType ticketType){
+        lastTicketID++;
         switch (ticketType){
-            case MINMAX: return new MinMaxTicket(lastTicketId, TimeRandomizer.TIME_RANDOMIZER.getMorningTime());
-            case EVENT: return new EventTicket(lastTicketId, TimeRandomizer.TIME_RANDOMIZER.getMorningTime());
-            case LOST: return new LostTicket(lastTicketId, TimeRandomizer.TIME_RANDOMIZER.getMorningTime());
+            case MINMAX: return new MinMaxTicket(lastTicketID, TimeRandomizer.TIME_RANDOMIZER.getMorningTime());
+            case EVENT: return new EventTicket(lastTicketID, TimeRandomizer.TIME_RANDOMIZER.getMorningTime());
+            case LOST: return new LostTicket(lastTicketID, TimeRandomizer.TIME_RANDOMIZER.getMorningTime());
             default: return null;
         }
     }
@@ -35,8 +35,8 @@ public enum TicketBuilder {
      * Set id of most recent ticket;
      * @param i new id
      */
-    public void setLastTicketId(int i){
-        this.lastTicketId = i;
+    public void setLastTicketID(int i){
+        this.lastTicketID = i;
     }
 
 
@@ -44,7 +44,7 @@ public enum TicketBuilder {
      * Get id of most recent ticket
      * @return ticket id
      */
-    public int getLastTicketId() {
-        return lastTicketId;
+    public int getLastTicketID() {
+        return lastTicketID;
     }
 }
