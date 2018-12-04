@@ -38,9 +38,12 @@ public class UserInterface {
                 System.out.println("Error encountered:" + e);
             }
 
+
+
             switch (input) {
                 case "1":
                     if (isLiveTicket) {
+                        showHeader();
                         garage.checkOutVehicle(TicketBuilder.TICKET_BUILDER.getLastTicketID());
                         isLiveTicket = false;
                     } else {
@@ -50,6 +53,7 @@ public class UserInterface {
                     break;
                 case "2":
                     if (isLiveTicket) {
+                        showHeader();
                         garage.getCheckOutATM().loseTicket(TicketBuilder.TICKET_BUILDER.getLastTicketID());
                         garage.checkOutVehicle(TicketBuilder.TICKET_BUILDER.getLastTicketID());
                         isLiveTicket = false;
@@ -60,13 +64,13 @@ public class UserInterface {
                     break;
                 case "3":
                     if (isLiveTicket) {
-                        System.out.println("Invalid input");
+                        System.out.println("Invalid input\n\n\n");
                     } else {
                         garage.closeGarage();
                     }
                     break;
                 default:
-                    System.out.println("Invalid Selection");
+                    System.out.println("Invalid Selection\n\n\n");
 
                 }
         }
@@ -76,8 +80,8 @@ public class UserInterface {
      * displays a header in console
      */
     private void showHeader() {
-        System.out.println("BEST VALUE PARKING GARAGE");
-        System.out.println("=========================");
+        System.out.println("\nBEST VALUE PARKING GARAGE");
+        System.out.println("=========================\n");
     }
 
     /**

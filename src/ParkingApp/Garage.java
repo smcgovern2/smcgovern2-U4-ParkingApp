@@ -26,14 +26,21 @@ public class Garage {
 
     private CheckInATM checkInATM;
     private CheckOutATM checkOutATM;
+    private String fileName;
     private TreeMap<Integer, Ticket> ticketMap;
     private EnumMap<TicketType, PricingMode> priceMap = new EnumMap<>(TicketType.class);
-    private String fileName;
 
 
 
 
     public Garage(ConfigData config) throws NumberFormatException {
+        this.checkInATM = new CheckInATM(this);
+        this.checkOutATM = new CheckOutATM(this);
+
+        priceMap.put(TicketType.MINMAX, new MinMaxPricing(config.getMinMaxFields()[0], config.getMinMaxFields()[1], config.getMinMaxFields()[2], config.getMinMaxFields()[3]));
+        priceMap.put(TicketType.EVENT, new EventPricing(config.getEventField()));
+        priceMap.put(TicketType.LOST, new LostPricing(config.getLostField()));
+
         this.fileName = config.getFileName();
         FileInput inFile = new FileInput(this.fileName);
         String line;
@@ -51,7 +58,6 @@ public class Garage {
                     System.out.println("Unable to read from file");
                     break;
                 }
-
                 Ticket ticket;
                 switch (ticketType) {
                     case MINMAX:
@@ -69,6 +75,7 @@ public class Garage {
                     default:
                         throw new Exception("Error on import");
                 }
+                this.getCheckOutATM().calculateTicketPrice(ticket);
                 ticketMap.put(Integer.parseInt(fields[0]), ticket);
                 lastTicketID = Integer.parseInt(fields[0]);
             }
@@ -78,12 +85,10 @@ public class Garage {
             System.exit(10);
         }
 
+
+
         TicketBuilder.TICKET_BUILDER.setLastTicketID(lastTicketID);
-        this.checkInATM = new CheckInATM(this);
-        this.checkOutATM = new CheckOutATM(this);
-        priceMap.put(TicketType.MINMAX, new MinMaxPricing(config.getMinMaxFields()[0], config.getMinMaxFields()[1], config.getMinMaxFields()[2], config.getMinMaxFields()[3]));
-        priceMap.put(TicketType.EVENT, new EventPricing(config.getEventField()));
-        priceMap.put(TicketType.LOST, new LostPricing(config.getLostField()));
+
     }
 
 

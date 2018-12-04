@@ -47,7 +47,7 @@ public class CheckOutATM {
      * @param ticket ticket to be run
      */
 
-    private void calculateTicketPrice(Ticket ticket){
+    public void calculateTicketPrice(Ticket ticket){
         int hours = getTicketHours(ticket);
         PricingMode pricingMode;
         pricingMode = this.garage.getPriceMap().get(ticket.getType());
@@ -73,7 +73,7 @@ public class CheckOutATM {
      */
 
     private void printReceipt(Ticket ticket) {
-        System.out.printf("Receipt for vehicle id %03d \n\n ", ticket.getTicketID());
+        System.out.printf("Receipt for vehicle id %03d \n\n", ticket.getTicketID());
         switch (ticket.getType()) {
             case MINMAX:
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -125,7 +125,7 @@ public class CheckOutATM {
         System.out.println("Activity to Date\n");
         System.out.printf("$%s.00 was collected from %d Check Ins\n", Integer.toString(collectedDollars), collectionCount);
         System.out.printf("$%s.00 was collected from %d Special Events\n", Integer.toString(eventDollars), eventCount);
-        System.out.printf("$%s.00 was collected from %d lost tickets\n", Integer.toString(lostDollars), lostCount);
+        System.out.printf("$%s.00 was collected from %d Lost Tickets\n", Integer.toString(lostDollars), lostCount);
         System.out.printf("%d vehicle(s) have not yet checked out\n", remainingVehicles);
     }
 
