@@ -126,7 +126,9 @@ public class CheckOutATM {
         System.out.printf("$%s.00 was collected from %d Check Ins\n", Integer.toString(collectedDollars), collectionCount);
         System.out.printf("$%s.00 was collected from %d Special Events\n", Integer.toString(eventDollars), eventCount);
         System.out.printf("$%s.00 was collected from %d Lost Tickets\n", Integer.toString(lostDollars), lostCount);
-        System.out.printf("%d vehicle(s) have not yet checked out\n", remainingVehicles);
+        System.out.printf("%d vehicle(s) have not yet checked out\n\n", remainingVehicles);
+        System.out.printf("$%s.00 was collected Overall\n", Integer.toString(collectedDollars + eventDollars + lostDollars));
+
     }
 
 }

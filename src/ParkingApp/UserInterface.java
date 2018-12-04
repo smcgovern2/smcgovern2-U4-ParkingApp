@@ -66,6 +66,7 @@ public class UserInterface {
                     if (isLiveTicket) {
                         System.out.println("Invalid input\n\n\n");
                     } else {
+                        showHeader();
                         garage.closeGarage();
                     }
                     break;
