@@ -7,9 +7,9 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Class to randomize checkin and checkout times
+ * Class to randomize checkin and checkout times, accessed as enum singleton
  * @author Sean McGovern
- * @version 1.0.0
+ * @version 2.0.0
  */
 public enum TimeRandomizer {
     TIME_RANDOMIZER;

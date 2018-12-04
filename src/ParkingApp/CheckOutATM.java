@@ -1,34 +1,51 @@
 package ParkingApp;
 
+import ParkingApp.TicketSubclass.LostTicket;
+
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
  * Class to check vehicles out of garage
  * @author Sean McGovern
- * @version 1.0.0
+ * @version 2.0.0
  */
 
-class CheckOutATM {
+public class CheckOutATM {
     private Garage garage;
 
     CheckOutATM(Garage garage) {
         this.garage = garage;
     }
 
-    void checkoutTicket(Ticket ticket) {
+    /**
+     * Method to set a checked in ticket to checked out
+     * @param ticket Ticket to check out
+     */
+
+    public void checkoutTicket(Ticket ticket) {
         ticket.setOutTime(TimeRandomizer.TIME_RANDOMIZER.getEveningTime());
         calculateTicketPrice(ticket);
         this.garage.getTicketMap().put(ticket.getTicketID(), ticket);
         printReceipt(ticket);
     }
 
+
+    /**
+     * Method to get number of hours a ticket was checked in
+     * @param ticket Ticket to query
+     * @return number of hours checked in
+     */
     private int getTicketHours(Ticket ticket){
         long timeParked = ticket.getOutTime().getTime() - ticket.getInTime().getTime();
         return (int) (timeParked / 3600000);
     }
+
+    /**
+     * method to calculate price of ticket and assign to ticket object
+     * @param ticket ticket to be run
+     */
 
     private void calculateTicketPrice(Ticket ticket){
         int hours = getTicketHours(ticket);
@@ -37,7 +54,12 @@ class CheckOutATM {
         ticket.setPrice(pricingMode.getTicketPrice(hours));
     }
 
-    void loseTicket(int id){
+    /**
+     * Method to replace a ticket in the garage with a lost one
+     * @param id id of ticket to lose
+     */
+
+    public void loseTicket(int id){
         Ticket oldTicket = this.garage.getTicketMap().get(id);
         Ticket newTicket = new LostTicket(oldTicket.getTicketID(),oldTicket.getInTime());
         this.garage.getTicketMap().put(oldTicket.getTicketID(), newTicket);
@@ -46,7 +68,7 @@ class CheckOutATM {
 
 
     /**
-     * Prints ticket id and price to console
+     * Prints ticket information to console, dependent on ticket type
      * @param ticket the ticket to be printed
      */
 
@@ -76,7 +98,7 @@ class CheckOutATM {
      * Prints aggregate data from ticketMap on total money collected from all sources and tickets unaccounted for
      * @param ticketMap treemap of tickets to be handled
      */
-    void displayEODInfo(TreeMap<Integer, Ticket> ticketMap) {
+    public void displayEODInfo(TreeMap<Integer, Ticket> ticketMap) {
         int collectionCount = 0;
         int collectedDollars = 0;
         int lostCount = 0;

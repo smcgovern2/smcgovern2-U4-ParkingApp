@@ -3,12 +3,11 @@ package ParkingApp;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 
 /**
  * Class to facilitate user input to garage
  * @author Sean McGovern
- * @version 1.0.0
+ * @version 2.0.0
  */
 public class UserInterface {
 

@@ -2,12 +2,10 @@ package ParkingApp;
 
 import ParkingApp.Util.ConfigData;
 
-import java.text.ParseException;
-
 /**
  * Startup class for parking app
  * @author Sean McGovern
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 public class Main {
@@ -32,7 +30,10 @@ public class Main {
         //Flat lost ticket fee in dollars
         int lostFee = 25;
 
-        ConfigData config = new ConfigData(new int[]{minHours,minFee,hourlyFee,maxFee}, eventFee, lostFee);
+        //FILE NAME
+        String fileName = "Ledger.csv";
+
+        ConfigData config = new ConfigData(new int[]{minHours,minFee,hourlyFee,maxFee}, eventFee, lostFee, fileName);
 
         Garage garage = new Garage(config);
         UserInterface ui = new UserInterface(garage);

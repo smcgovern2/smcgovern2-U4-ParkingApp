@@ -1,19 +1,24 @@
 package ParkingApp;
 
+import ParkingApp.PricingModeSubclass.EventPricing;
+import ParkingApp.PricingModeSubclass.LostPricing;
+import ParkingApp.PricingModeSubclass.MinMaxPricing;
+import ParkingApp.TicketSubclass.EventTicket;
+import ParkingApp.TicketSubclass.LostTicket;
+import ParkingApp.TicketSubclass.MinMaxTicket;
 import ParkingApp.Util.ConfigData;
 import ParkingApp.Util.FileInput;
 import ParkingApp.Util.FileOutput;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.EnumMap;
 
 /**
  * Class to simulate a parking garage
  * @author Sean McGovern
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 public class Garage {
@@ -23,12 +28,14 @@ public class Garage {
     private CheckOutATM checkOutATM;
     private TreeMap<Integer, Ticket> ticketMap;
     private EnumMap<TicketType, PricingMode> priceMap = new EnumMap<>(TicketType.class);
+    private String fileName;
 
 
 
 
-    Garage(ConfigData config) throws NumberFormatException {
-        FileInput inFile = new FileInput("Ledger.csv");
+    public Garage(ConfigData config) throws NumberFormatException {
+        this.fileName = config.getFileName();
+        FileInput inFile = new FileInput(this.fileName);
         String line;
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         int lastTicketID = 0;
@@ -80,20 +87,28 @@ public class Garage {
     }
 
 
-    void checkInVehicle(TicketType type){
+    /**
+     * Process new vehicle entering garage;
+     * @param type initial ticket type for vehicle
+     */
+    public void checkInVehicle(TicketType type){
         checkInATM.createTicket(type);
 
     }
 
-    void checkOutVehicle(int id){
+    /**
+     * Process ticket of vehicle exiting garage
+     * @param id id of vehicles ticket
+     */
+    public void checkOutVehicle(int id){
         checkOutATM.checkoutTicket(ticketMap.get(id));
     }
     /**
-     * Closes garage and ends program
+     * Writes to ledger, Closes garage and ends program
      */
-    void closeGarage() {
+    public void closeGarage() {
         checkOutATM.displayEODInfo(ticketMap);
-        FileOutput outFile = new FileOutput("Ledger.csv");
+        FileOutput outFile = new FileOutput(this.fileName);
         for (Map.Entry<Integer, Ticket> entry : ticketMap.entrySet()) {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
             Ticket value = entry.getValue();
@@ -125,7 +140,7 @@ public class Garage {
      * get the checkout atm
      * @return the checkout atm
      */
-    CheckOutATM getCheckOutATM() {
+     public CheckOutATM getCheckOutATM() {
         return checkOutATM;
     }
 
@@ -142,7 +157,7 @@ public class Garage {
      * @return ticket map
      */
 
-    TreeMap<Integer, Ticket> getTicketMap() {
+    public TreeMap<Integer, Ticket> getTicketMap() {
         return ticketMap;
     }
 
@@ -156,7 +171,11 @@ public class Garage {
     }
 
 
-    EnumMap<TicketType, PricingMode> getPriceMap() {
+    /**
+     * get the enummap of pricingmodes
+     * @return enummap of pricingmodes
+     */
+    public EnumMap<TicketType, PricingMode> getPriceMap() {
         return priceMap;
     }
 }

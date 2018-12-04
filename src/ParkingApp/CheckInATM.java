@@ -1,12 +1,10 @@
 package ParkingApp;
-import java.util.Date;
-
 /**
  * Class to check vehicles into garage
  * @author Sean McGovern
- * @version 1.0.0
+ * @version 2.0.0
  */
-class CheckInATM {
+public class CheckInATM {
 
     private Garage garage;
 
@@ -14,7 +12,10 @@ class CheckInATM {
         this.garage = garage;
     }
 
-    void createTicket(TicketType type){
+    /**Method to add new ticket to garage
+     * @param type type of ticket to add
+     */
+    public void createTicket(TicketType type){
         Ticket ticket = TicketBuilder.TICKET_BUILDER.getTicket(type);
         if (ticket != null) {
             this.garage.getTicketMap().put(ticket.getTicketID(), ticket);
@@ -23,6 +24,7 @@ class CheckInATM {
             System.exit(10);
         }
     }
+
 
 }
 
